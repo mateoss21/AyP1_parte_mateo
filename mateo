@@ -35,7 +35,6 @@ ArrRegNegocio = Array [1..MAX] of tRegNegocio;
                                                     'MATEO'
     '//****************************************************************************************************************//'
     '//****************************************************************************************************************//'
-
     //***********************************************************************//  
     function confirma (msj:string):boolean;
     (*
@@ -204,7 +203,6 @@ ArrRegNegocio = Array [1..MAX] of tRegNegocio;
 
         if opcion then
             NuevoArt.alta := confirma('Dar el producto de alta? S/N');
-        
     end;
 
     //***********************************************************************//  
@@ -280,12 +278,15 @@ ArrRegNegocio = Array [1..MAX] of tRegNegocio;
 
             if pos = -1 then //si es un articulo nuevo
             begin
+                ClrScr;
+                
                 IngresarDatos(NuevoArt,True);
 
                 Assign(archInventario, ruta);
                 reset(archInventario);    
                 InsertarOrdenado(archInventario, NuevoArt);
                 close(archInventario);
+                dim := dim+1;
 
                 writeln('¡Listado con exito! :)');                
             end
@@ -293,9 +294,11 @@ ArrRegNegocio = Array [1..MAX] of tRegNegocio;
                 writeln('ERROR: este produccto ya existe');
         end
         else
-            begin
-               writeln('ATENCION!!: Limite de almacenamiento alcanzado');
-            end;
+        begin
+            writeln('ATENCION!!: Limite de almacenamiento alcanzado');
+        end;
+
+        ClrScr;
     end;
 
     //***********************************************************************//  
@@ -327,7 +330,7 @@ ArrRegNegocio = Array [1..MAX] of tRegNegocio;
                 close(archInventario);                
             end;            
         end;
-
+        ClrScr;
     end;
     //***********************************************************************//      
     function Menu(msj: String):integer;
