@@ -75,7 +75,7 @@ ArrRegNegocio = Array [1..MAX] of tRegNegocio;
     End;
 
     //***********************************************************************// 
-        function entero (msj : string):Integer;
+    function entero (msj : string):Integer;
     Var
         Cod, n: integer;
         s: string;
