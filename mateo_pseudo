@@ -1,0 +1,415 @@
+Algoritmo  BitMarket;
+
+    '//****************************************************************************************************************//'
+    '//****************************************************************************************************************//'
+                                                    'MATEO'
+    '//****************************************************************************************************************//'
+    '//****************************************************************************************************************//'
+
+
+    //***********************************************************************//  
+    funcion confirma (E msj:cadena):logico;
+    /* 
+    Qué hace: 
+        le mustra un mensaje al usuario para que esté lo responda por [S,s,N,n]
+    Precondición: 
+        M=msj ∈ dato estructurado
+    Postcondición: 
+        Preguntar = Verdadero o Falso
+    */
+    var
+       respuesta: caracter;
+    inicio
+        Repetir
+            mostrar(msj);
+            nuevalinea;
+            ingresar(respuesta); 
+            nuevalinea;        
+        Hasta (respuesta en ['s','n','S','N']);
+
+        Si (respuesta en ['n','N']) entonces
+            confirma <- TRUE;         
+        sino
+            confirma <- FALSE;                   
+        fin si
+    fin.
+
+    //***********************************************************************// 
+    funcion EnteroEnRango(E msj:cadena; E tope1,tope2: entero):entero;
+    /* Qué hace:
+        Solicita al usuario ingresar un valor entre tope 1 y tope 2
+    Precondición:
+        msj = MENSAJE de cadena; tope1 y tope2 es el rango permitido para el ingreso de un valor
+    Postcondición:
+        Devuelve un valor entero n donde tope1 <= n <= tope2
+    */
+    Var
+        valor: entero;
+    inicio
+        Repetir
+            mostrar(msj);
+            nuevaLinea;
+            ingresar (valor);
+
+            si (valor < tope1) o (valor > tope2) hacer
+                mostrar("ERROR: dimension inválida. se espera que el valor ingresado sea entre", tope1,"y", tope2);
+            fin si
+
+        Hasta (valor en [tope1..tope2])
+        
+        EnteroEnRango <- valor;
+    fin;
+
+    //***********************************************************************//
+    funcion IngresarNaturalE(E msj:cadena):entero;
+    /* Qué hace:
+        Solicita al usuario ingresar un valor natural entero
+    Precondición:
+        msj = MENSAJE de cadena;
+    Postcondición:
+        Devuelve un valor entero n > 0
+    */
+    var
+        valor:entero;
+    inicio
+        Repetir            
+            mostrar(msj);
+            nuevaLinea;
+            ingresar (valor);
+
+            si valor < 0 hacer
+                mostrar("ERROR: Ingrese un valor natural correcto");
+            fin si
+        hasta (valor >= 0);
+
+        IngresarNaturalE <- valor;
+    fin.
+
+    //***********************************************************************//
+    funcion IngresarNaturalR(E msj:cadena):Real;
+    /* Qué hace:
+        Solicita al usuario ingresar un valor natural real
+    Precondición:
+        msj = MENSAJE de cadena;
+    Postcondición:
+        Devuelve un valor real n > 0
+    */
+    var
+        valor:Real;
+    inicio
+        Repetir            
+            mostrar(msj);
+            nuevaLinea;
+            ingresar (valor);
+
+            si valor < 0 hacer
+                mostrar("ERROR: Ingrese un valor natural correcto");
+            fin si
+        hasta (valor >= 0)
+
+        IngresarNaturalR <- valor;
+
+    fin.
+
+    //***********************************************************************//
+    funcion Dia(E mes:entero; E bisiesto: logico):entero;
+    /* Qué hace:
+        valida que el usuario ingrese el valor correcto segun la fecha
+    Precondición:
+        mes ∈ tFecha de entero; bisiesto es un logico de si o no bisiesto
+    Postcondición:
+        Devuelve un valor validado entre el rango de dias disponibles
+    */            
+    inicio
+        si  bisiesto hacer
+            segun (mes) hacer
+                1,3,5,7,8,10,12: Dia <- EnteroEnRango ("Ingrese un día", 1, 31);
+                4,6,9,11: Dia <- EnteroEnRango ("Ingrese un día", 1, 30);
+                2: Dia <- EnteroEnRango ("Ingrese un día", 1, 29);
+            fin segun
+        sino
+            segun (mes) hacer
+                1,3,5,7,8,10,12: Dia <- EnteroEnRango ("Ingrese un día", 1, 31);
+                4,6,9,11: Dia <- EnteroEnRango ("Ingrese un día", 1, 30);
+                2: Dia <- EnteroEnRango ("Ingrese un día", 1, 28);
+            fin segun
+        fin si
+    fin.
+
+    //***********************************************************************//
+    funcion DiasValido(E a:entero ; E m:entero ):entero;
+    /* Qué hace:
+        verifica si el año es biciesto
+    Precondición:
+        a = año y m = mes  ∈ tFecha de entero;
+    Postcondición:
+        Devuelve un valor ingresado segun la fecha
+    */     
+    inicio
+        si (a mod 4 = 0) o ((a mod 100 = 0) y (a mod 400 = 0)) hacer
+            DiasValido <- Dia(m, True) //biciesto
+        sino
+            DiasValido <- Dia(m, false);//no biciesto
+        fin si
+    fin. 
+
+    //***********************************************************************//
+    procedimiento IngresarFecha(E msj: cadena; E/S fecha: tFecha);
+    /* Qué hace:
+        Valida e ingresa una fecha
+    Precondición:
+        msg=M
+    Poscondición:
+        fecha = F, F es fecha válida
+    */   
+    inicio
+        mostrar(msj);
+        nuevaLinea;
+
+        fecha.anio <- EnteroEnRango("Ingrese un año: ", 1900, 2300);
+        fecha.mes <- EnteroEnRango("Ingrese un mes: ", 1, 12);
+        fecha.dia <- DiasValido(fecha.anio, fecha.mes);  //esta función, en base al año y al mes valida que sea una cantidad de días válido
+    fin.
+
+    //***********************************************************************// 
+    procedimiento IngresarDatos(E/S NuevoArt:tRegNegocio; E opcion: logico);
+    /* Qué hace:
+        ingresa los datos del articulo
+    Precondición:
+        NuevoArt = Art ∈ tRegNegocio; opcion = V (articulo nuevo) o F (modificar articulo)
+    Poscondición:
+        si V => Art retorna Art'; si F => Art' retorna Art''
+    */   
+    inicio
+        mostrar("-------Intgrese los siguientes datos:");
+        nuevaLinea;
+
+        si opcion hacer
+            mostrar(" * seccion del producto");
+            ingresar(NuevoArt.Seccion);
+            nuevaLinea;
+            mostrar(" * codigo del producto");
+            ingresar(NuevoArt.Codigo); 
+            nuevaLinea;           
+        fin si  
+
+        mostrar(" * nombre del producto");
+        ingresar(NuevoArt.Nombre);
+
+        NuevoArt.Stock <- IngresarNaturalE(" * stock actual del producto");
+        NuevoArt.Precio <- IngresarNaturalR(" * precio del producto");
+
+        IngresarFecha(" * Fecha de adquisición", NuevoArt.FechaAdq);
+        IngresarFecha(" *  Fecha de última venta", NuevoArt.FechaUv);
+        IngresarFecha(" * Fecha de caducidad", NuevoArt.FechaCad);
+
+        si opcion hacer
+            NuevoArt.alta <- confirma("Dar el producto de alta? S/N");
+        fin si
+    fin.
+
+    //***********************************************************************//  
+    procedimiento BuscarCodigoArchivo(E/S Negocio: tRegNegocio; E/S Indice: entero; E FilePath: cadena; E Ini,fin_: entero; E E:cadena);
+    /* Qué hace:
+        busca la posición de un elemento en un archivo ordenado
+    Precondición:
+        Negocio = Art ∈ tRegNegocio; indice = pos; FilePath = ruta; ini = principio y fin = fin de la dim del archivo; E = elemento codigo del producto
+    Poscondición:
+        retorna pos = -1, si no se encontro elemento; sino retorna pos = n y negocio = tRegNegocio del archivo
+    */   
+    Var
+        p,f,punt,pos: entero;
+    inicio
+        pos <- -1;
+        p <- Ini;
+        f <- fin_;
+
+        Mientras (pos = -1) and (p <= f) hacer
+            punt <- (p + f) div 2;
+            getFileBusiness(Negocio,Indice,punt,FilePath);
+            si (Negocio.Codigo = E) hacer
+                pos <-  punt;
+            sino
+                getFileBusiness(Negocio,Indice,punt,FilePath);
+                si (Negocio.Codigo > E) hacer
+                    f <- punt-1
+                sino
+                    p <- punt+1;
+                fin si
+            fin si
+        Fin mientras 
+
+        Indice <- Indice - 1;
+    fin.
+
+    //***********************************************************************// 
+    procedimiento InsertarOrdenado(E/S arch: tArchNegocio;E NuevoReg: tRegNegocio);
+    /* Qué hace:
+        Agrega el articulo de manera ordenada
+    Precondición:
+        arch = archivo ya abierto y ordenado; NuevoReg ∈ tRegNegocio
+    Poscondición:
+        arch = arch' de manera ordenada
+    */   
+    var
+        pos: entero;
+        articulo: tRegNegocio;
+        lugar:logico;
+    inicio
+        pos <- FileSize(arch)-1;
+        lugar <- false;
+        mientras (pos >= 0) y (no lugar) hacer
+            posicionase(arch, pos);
+            leer (arch, articulo);
+
+            si (comparar(NuevoReg,articulo) < 0) entonces
+                escribir(arch, articulo);
+                pos <- pos-1;
+            sino
+                lugar <- TRUE;
+            fin si
+        fin mientras
+        posicionase(arch, pos+1);
+        escribir(arch, NuevoReg);
+    fin.
+    //***********************************************************************//  
+    procedimiento DarAltaArticulo(E ruta :cadena; E/S dim:entero; E max:entero);
+    /* Qué hace:
+        da de alta un producto
+    Precondición:
+        ruta = Narch; dim = dim de arch
+    Poscondición:
+        dim = dim + 1 si pos = -1
+    */   
+    var
+        pos: entero;
+        NuevoArt: tRegNegocio;
+        negocio: tRegNegocio;
+        archInventario: tArchNegocio; 
+    inicio
+        mostrar("Ingrese el codigo del producto");
+        ingresar(NuevoArt.Codigo);
+        nuevaLinea;
+
+        pos <- -1;
+
+        BuscarCodigoArchivo(negocio, pos, ruta, 1, dim, NuevoArt.Codigo);
+
+        si pos = -1 entonces //si es un articulo nuevo
+            LimpiarPantalla;
+                
+            IngresarDatos(NuevoArt,True);
+
+            abrir(archInventario, ruta);   
+            InsertarOrdenado(archInventario, NuevoArt);
+            cerrar(archInventario);
+
+            dim <- dim+1;
+
+            mostrar("¡Listado con exito! :)");                
+        sino
+            mostrar("ERROR: este produccto ya existe");
+        fin si
+        LimpiarPantalla;
+    fin.
+
+    //***********************************************************************//  
+    procedimiento ModArticuloDeAlta(E ruta: cadena; E dim: entero);
+    /* Qué hace:
+        permite modificar un articulo
+    Precondición:
+        ruta = Narch; dim = dim de arch
+    Poscondición:
+        arch = arch' si pos <> -1
+    */   
+    var
+        pos: entero;
+        NuevoArt: tRegNegocio;
+        negocio: tRegNegocio;
+        archInventario: tArchNegocio; 
+    inicio
+        mostrar("Ingrese codigo del articulo que desea modificar");
+        ingresar(NuevoArt.Codigo);
+
+        pos <- -1;
+        BuscarCodigoArchivo(negocio, pos, ruta, 1, dim, NuevoArt.Codigo);
+
+        si pos = -1 entonces
+            mostrar("ERROR: Este produccto no se encuentra listado");
+        sino
+            NuevoArt <- negocio;
+            si (no confirma("Estas seguro de querer modificar este articulo?")) entonces
+                IngresarDatos(NuevoArt,False);
+                abrir(archInventario, ruta);
+                posicionase(archInventario, pos);
+                escribir (archInventario, NuevoArt);
+                cerrar(archInventario);                
+            fin si           
+        fin si
+        LimpiarPantalla;
+    fin.
+    //***********************************************************************//      
+    funcion Menu(E msj: cadena):entero;
+    /* Qué hace:
+        muestra menu del programa
+    Precondición:
+        msj = MENSAJE
+    Poscondición:
+        menu = n ∈ [0..7]
+    */   
+    inicio
+        Writeln(msj);
+        Writeln('Menu:');
+        Writeln('   0. Para salir');
+        Writeln('   1. Dar de alta un artículo');
+        Writeln('   2. Modificar un artículo de alta');
+        Writeln('   3. Eliminar un artículo ');
+        Writeln('   4. Activar un artículo de baja');  
+        Writeln('   5. Mostrar un artículo');
+        Writeln('   6. Listar todos los artículos de una sección');
+        Writeln('   7. Exportar a CSV');
+        Menu <- EnteroEnRango('ingrece alguna opcion:', 0, 7);   
+    fin.
+
+//******************************************************************//
+//************************ALG_PRINCIPAL*****************************//
+//******************************************************************//
+
+var
+//variables de prueba, borrar al final.
+//Negocio: tRegNegocio;
+//NegocioArchivo: tArchNegocio;
+Negocios: ArrRegNegocio;
+secDim,dim,opcion,i: entero;
+secciones: ArrSecciones;
+
+inicio
+    secDim <- 0;
+    dim <- 0;
+
+    //levanto el csv a un arreglo de registros.
+    CSVaArrRegistro(Negocios,dim,'SUCURSAL_CENTRO.CSV');
+    //listar(Negocios, dim);
+
+    //ordeno el arreglo por seccion y codigo.
+    ordenArrSeCod(Negocios,dim);
+    //listar(Negocios, dim);
+
+    //convierto el arreglo ordenado a .dat
+    arrToDat(Negocios,secciones,secDim, dim,'INVENTARIO.DAT');    
+
+    opcion <- -1;
+    mientras opcion <> 0 hacer
+        opcion <- Menu("-------------“Bit Market”-------------");
+        
+        segun opcion hacer
+            1: DarAltaArticulo('INVENTARIO.DAT', dim);
+            2: ModArticuloDeAlta('INVENTARIO.DAT', dim);
+            3: EliminarArticulo('INVENTARIO.DAT',secciones,secDim);
+            4: ActivarArticuloDeBaja('INVENTARIO.DAT',secciones,secDim);
+            5: MostrarArticulo('INVENTARIO.DAT');
+            6: listarDAT('INVENTARIO.DAT',secciones,secDim);
+            7: Exportar(Negocios);
+        fin segun
+    fin mientras
+fin.
