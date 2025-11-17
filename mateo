@@ -1,9 +1,6 @@
 Program BitMarket;
 uses SysUtils;
 
-const 
- MAX = 500;
-
 Type
 tFecha = Record
   dia: Integer;
@@ -260,15 +257,13 @@ ArrRegNegocio = Array [1..MAX] of tRegNegocio;
         Write (arch, NuevoReg);
     end;
     //***********************************************************************//  
-    procedure DarAltaArticulo(ruta :String; var dim:Integer; max:Integer);
+    procedure DarAltaArticulo(ruta :String; var dim:Integer);
     var
         pos: Integer;
         NuevoArt: tRegNegocio;
         negocio: tRegNegocio;
         archInventario: tArchNegocio; 
     begin
-        if dim <= max then
-        begin
             write('Ingrese el codigo del producto');
             readln(NuevoArt.Codigo);
 
@@ -292,12 +287,6 @@ ArrRegNegocio = Array [1..MAX] of tRegNegocio;
             end
             else
                 writeln('ERROR: este produccto ya existe');
-        end
-        else
-        begin
-            writeln('ATENCION!!: Limite de almacenamiento alcanzado');
-        end;
-
         ClrScr;
     end;
 
@@ -380,7 +369,7 @@ begin
         //Porfa pongalo con nombre ruta que me confunde :'(
 
         case opcion of
-            1: DarAltaArticulo('INVENTARIO.DAT', dim, max);
+            1: DarAltaArticulo('INVENTARIO.DAT', dim);
             2: ModArticuloDeAlta('INVENTARIO.DAT', dim);
             3: EliminarArticulo('INVENTARIO.DAT',secciones,secDim);
             4: ActivarArticuloDeBaja('INVENTARIO.DAT',secciones,secDim);
